@@ -332,19 +332,36 @@ function renderCharacteristics() {
     m1Title.style.cssText = "font-family: var(--font-heading); margin: 3rem 0 1.5rem; font-size: 1.3rem; text-align: center;";
     container.appendChild(m1Title);
 
-    const m1Grid = document.createElement('div');
-    m1Grid.style.cssText = "display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;";
+    const m1Container = document.createElement('div');
+    m1Container.style.cssText = "display: grid; grid-template-columns: 1fr 3fr; gap: 1.5rem; margin-bottom: 1rem;";
 
-    projectData.characteristics.m1Figures.forEach(fig => {
+    // Left column: Mean comparison (spans all 3 rows)
+    const meanDiv = document.createElement('div');
+    meanDiv.style.cssText = "display: flex; flex-direction: column; justify-content: center; align-items: center;";
+    const meanComparison = projectData.characteristics.m1Figures[9]; // Last item is mean comparison
+    meanDiv.innerHTML = `
+        <img src="${meanComparison.src}" alt="${meanComparison.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-main); font-weight: 600;">${meanComparison.label}</p>
+    `;
+    m1Container.appendChild(meanDiv);
+
+    // Right column: 3x3 grid of individual datasets
+    const datasetsGrid = document.createElement('div');
+    datasetsGrid.style.cssText = "display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;";
+
+    // First 9 items (excluding the mean comparison)
+    projectData.characteristics.m1Figures.slice(0, 9).forEach(fig => {
         const div = document.createElement('div');
         div.style.cssText = "text-align: center;";
         div.innerHTML = `
             <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
-            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">${fig.label}</p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">${fig.label}</p>
         `;
-        m1Grid.appendChild(div);
+        datasetsGrid.appendChild(div);
     });
-    container.appendChild(m1Grid);
+    m1Container.appendChild(datasetsGrid);
+
+    container.appendChild(m1Container);
 
     const m1Caption = document.createElement('p');
     m1Caption.innerHTML = "Compares the <strong>distribution of text instances in scene images (M₁)</strong> of MIST against existing datasets.";
