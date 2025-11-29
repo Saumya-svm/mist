@@ -43,22 +43,22 @@ const projectData = {
         ]
     },
     characteristics: {
-        intro: "We define metrics to quantify the incidental nature of scene text datasets. MIST proves to be the most incidental, with significantly more text instances per image and smaller text scales compared to existing datasets.",
-        metrics: [
+        intro: "We define metrics to quantify the incidental nature of scene text datasets. For a single image <i>I</i>, <i>T</i> denotes its set of text instances (<i>N</i>=|<i>T</i>|), <i>A<sub>t</sub></i> the area of an instance <i>t</i> ∈ <i>T</i>, and <i>A<sub>I</sub></i> the image area. For a dataset <i>D</i>={<i>I<sub>i</sub></i>}, <i>T<sub>i</sub></i> and <i>N<sub>i</sub></i>=|<i>T<sub>i</sub></i>| denote the instances and count for image <i>I<sub>i</sub></i>.",
+        metricsTable: [
             {
-                name: "M₁",
-                description: "Average number of text instances per image. Higher values indicate more text-dense scenes.",
-                formula: "M₁ = (1/|D|) Σ N_i"
+                imageLevel: "m<sub>1</sub> = N",
+                datasetLevel: "M<sub>1</sub> = <sup>1</sup>/<sub>|D|</sub> Σ<sub>i∈D</sub> m<sub>1</sub><sup>(i)</sup>",
+                description: "m<sub>1</sub> counts text instances in a single image, whereas M<sub>1</sub> averages this count over the dataset. Typically, m<sub>1</sub><sup>H</sup> > m<sub>1</sub><sup>F</sup> and M<sub>1</sub><sup>H</sup> > M<sub>1</sub><sup>F</sup>."
             },
             {
-                name: "M₂",
-                description: "Instance-weighted mean area proportion of text relative to image. Lower values indicate smaller text.",
-                formula: "M₂ = (1/ΣN_i) ΣΣ (A_t / A_I)"
+                imageLevel: "m<sub>2</sub> = <sup>A<sub>t</sub></sup>/<sub>A<sub>I</sub></sub>, ∀ t∈T",
+                datasetLevel: "M<sub>2</sub> = <sup>1</sup>/<sub>Σ<sub>i∈D</sub>|T<sub>i</sub>|</sub> Σ<sub>i∈D</sub> Σ<sub>t∈T<sub>i</sub></sub> m<sub>2</sub><sup>(i,t)</sup>",
+                description: "m<sub>2</sub> is the per-instance area proportion, whereas M<sub>2</sub> is the instance-weighted mean over the dataset. Typically, m<sub>2</sub><sup>H</sup> < m<sub>2</sub><sup>F</sup> and M<sub>2</sub><sup>H</sup> < M<sub>2</sub><sup>F</sup>."
             },
             {
-                name: "M₃",
-                description: "Average area proportion of text per image. Lower M₃ indicates higher incidentalness.",
-                formula: "M₃ = (1/|D|) Σ (Σ A_t / A_I·N_i)"
+                imageLevel: "m<sub>3</sub> = <sup>Σ<sub>t</sub> A<sub>t</sub></sup>/<sub>A<sub>I</sub> N</sub>",
+                datasetLevel: "M<sub>3</sub> = <sup>1</sup>/<sub>|D|</sub> Σ<sub>i∈D</sub> m<sub>3</sub><sup>(i)</sup>",
+                description: "m<sub>3</sub> is the average instance area proportion within an image, whereas M<sub>3</sub> is the mean of m<sub>3</sub> across images. Typically, m<sub>3</sub><sup>H</sup> < m<sub>3</sub><sup>F</sup> and M<sub>3</sub><sup>H</sup> < M<sub>3</sub><sup>F</sup>; as m<sub>3</sub>→0 or M<sub>3</sub>→0, scene text is more incidental."
             }
         ],
         comparisonTable: [
@@ -254,24 +254,51 @@ function renderCharacteristics() {
     // Intro
     const intro = document.createElement('p');
     intro.innerHTML = projectData.characteristics.intro;
-    intro.style.cssText = "margin-bottom: 2rem; font-size: 1.1rem;";
+    intro.style.cssText = "margin-bottom: 2rem; font-size: 1.05rem; line-height: 1.7;";
     container.appendChild(intro);
 
-    // Metrics Cards
-    const metricsGrid = document.createElement('div');
-    metricsGrid.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;";
+    // Metrics Table
+    const metricsTitle = document.createElement('h3');
+    metricsTitle.textContent = "Metrics Definition";
+    metricsTitle.style.cssText = "font-family: var(--font-heading); margin: 2rem 0 1rem; font-size: 1.2rem;";
+    container.appendChild(metricsTitle);
 
-    projectData.characteristics.metrics.forEach(metric => {
-        const card = document.createElement('div');
-        card.style.cssText = "background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border);";
-        card.innerHTML = `
-            <h3 style="font-family: var(--font-heading); color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;">${metric.name}</h3>
-            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.75rem; font-family: monospace;">${metric.formula}</p>
-            <p style="font-size: 0.95rem; color: var(--text-muted);">${metric.description}</p>
+    const metricsTable = document.createElement('table');
+    metricsTable.style.cssText = "width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 2rem; background: rgba(255,255,255,0.02); border-radius: 12px; overflow: hidden;";
+
+    const metricsTableHead = document.createElement('thead');
+    metricsTableHead.innerHTML = `
+        <tr style="background: rgba(255,255,255,0.05);">
+            <th style="text-align: left; padding: 1rem; font-family: var(--font-heading); border-bottom: 2px solid var(--glass-border);">Image-level metric</th>
+            <th style="text-align: left; padding: 1rem; font-family: var(--font-heading); border-bottom: 2px solid var(--glass-border);">Dataset-level metric</th>
+        </tr>
+    `;
+    metricsTable.appendChild(metricsTableHead);
+
+    const metricsTableBody = document.createElement('tbody');
+    projectData.characteristics.metricsTable.forEach((metric, index) => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = index < projectData.characteristics.metricsTable.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none";
+        tr.innerHTML = `
+            <td style="padding: 1.25rem 1rem; font-family: 'Courier New', monospace; font-size: 1rem; color: var(--text-main);">${metric.imageLevel}</td>
+            <td style="padding: 1.25rem 1rem; font-family: 'Courier New', monospace; font-size: 1rem; color: var(--text-main);">${metric.datasetLevel}</td>
         `;
-        metricsGrid.appendChild(card);
+        tbody.appendChild(tr);
     });
-    container.appendChild(metricsGrid);
+    metricsTable.appendChild(metricsTableBody);
+    container.appendChild(metricsTable);
+
+    // Metric Descriptions
+    const descriptionsDiv = document.createElement('div');
+    descriptionsDiv.style.cssText = "margin-bottom: 2rem;";
+
+    projectData.characteristics.metricsTable.forEach((metric, index) => {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>m<sub>${index + 1}</sub> / M<sub>${index + 1}</sub>:</strong> ${metric.description}`;
+        p.style.cssText = "margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;";
+        descriptionsDiv.appendChild(p);
+    });
+    container.appendChild(descriptionsDiv);
 
     // Comparison Table
     const tableTitle = document.createElement('h3');
