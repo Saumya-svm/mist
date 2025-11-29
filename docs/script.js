@@ -27,13 +27,34 @@ const projectData = {
         ]
     },
     results: {
-        table: [
-            { model: "DP-DETR", pretrain: "Syn", precision: "69.61", recall: "57.04", fmeasure: "62.70", highlight: true },
-            { model: "TBPN", pretrain: "MLT", precision: "70.87", recall: "47.75", fmeasure: "57.06" },
-            { model: "MixNet", pretrain: "Syn", precision: "73.48", recall: "45.59", fmeasure: "56.27" },
-            { model: "DB++", pretrain: "Syn", precision: "72.84", recall: "39.73", fmeasure: "51.42" }
-        ],
-        caption: "Benchmarking results on MIST. DP-DETR achieves the best performance, but overall scores suggest significant room for improvement in handling incidental scenes."
+        items: [
+            {
+                type: "table",
+                title: "Performance Comparison",
+                span: 2,
+                data: [
+                    { model: "DP-DETR", pretrain: "Syn", precision: "69.61", recall: "57.04", fmeasure: "62.70", highlight: true },
+                    { model: "TBPN", pretrain: "MLT", precision: "70.87", recall: "47.75", fmeasure: "57.06" },
+                    { model: "MixNet", pretrain: "Syn", precision: "73.48", recall: "45.59", fmeasure: "56.27" },
+                    { model: "DB++", pretrain: "Syn", precision: "72.84", recall: "39.73", fmeasure: "51.42" }
+                ],
+                caption: "Benchmarking results on MIST. DP-DETR achieves the best performance, but overall scores suggest significant room for improvement in handling incidental scenes."
+            },
+            {
+                type: "image",
+                src: "images/result_vis.png",
+                alt: "Visual Results",
+                caption: "Visual detection results on MIST"
+            },
+            {
+                type: "comparison",
+                images: [
+                    { src: "images/mlt17.png", alt: "MLT17 Distribution" },
+                    { src: "images/totaltext.png", alt: "TotalText Distribution" }
+                ],
+                caption: "Distribution comparisons (MLT17 vs Total-Text)"
+            }
+        ]
     },
     citation: `@article{mist2025,
   title={MIST: Multilingual Incidental Dataset for Scene Text Detection},
@@ -44,16 +65,21 @@ const projectData = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderHeader();
-    renderAbstract();
-    renderMethod();
-    renderResults();
-    renderCitation();
-    initInteractions();
+    try {
+        renderHeader();
+        renderAbstract();
+        renderMethod();
+        renderResults();
+        renderCitation();
+        initInteractions();
+    } catch (e) {
+        console.error("Error rendering page:", e);
+    }
 });
 
 function renderHeader() {
     const header = document.querySelector('header');
+    if (!header) return;
 
     // Title
     const h1 = document.createElement('h1');
@@ -109,6 +135,7 @@ function renderHeader() {
 
 function renderAbstract() {
     const section = document.getElementById('abstract');
+    if (!section) return;
     const p = document.createElement('p');
     p.className = 'abstract-text';
     p.innerHTML = projectData.abstract;
@@ -117,6 +144,7 @@ function renderAbstract() {
 
 function renderMethod() {
     const container = document.querySelector('#method .method-overview');
+    if (!container) return;
 
     // Teaser
     const teaserDiv = document.createElement('div');
@@ -132,57 +160,87 @@ function renderMethod() {
     descDiv.style.padding = "2rem";
     projectData.method.description.forEach(text => {
         const p = document.createElement('p');
-        p.innerHTML = text;
+        // Fix LaTeX M3 to HTML
+        const processedText = text.replace(/\\\(M_3\\\)/g, "<i>M<sub>3</sub></i>");
+        p.innerHTML = processedText;
         descDiv.appendChild(p);
     });
     container.appendChild(descDiv);
 }
 
 function renderResults() {
-    const container = document.querySelector('#results .results-grid .result-item:first-child');
+    const grid = document.querySelector('#results .results-grid');
+    if (!grid) return;
 
-    // Table
-    const table = document.createElement('table');
-    table.style.cssText = "width: 100%; border-collapse: collapse; color: var(--text-muted);";
+    projectData.results.items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'result-item';
+        if (item.span) div.style.gridColumn = `span ${item.span}`;
 
-    const thead = document.createElement('thead');
-    thead.innerHTML = `
-        <tr style="border-bottom: 1px solid var(--glass-border);">
-            <th style="text-align: left; padding: 0.5rem;">Model</th>
-            <th style="text-align: center; padding: 0.5rem;">Pretrain</th>
-            <th style="text-align: center; padding: 0.5rem;">Precision</th>
-            <th style="text-align: center; padding: 0.5rem;">Recall</th>
-            <th style="text-align: center; padding: 0.5rem;">F-Measure</th>
-        </tr>
-    `;
-    table.appendChild(thead);
+        if (item.type === 'table') {
+            const h3 = document.createElement('h3');
+            h3.style.cssText = "font-family: var(--font-heading); margin-bottom: 1rem; color: var(--text-main);";
+            h3.textContent = item.title;
+            div.appendChild(h3);
 
-    const tbody = document.createElement('tbody');
-    projectData.results.table.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
-        const highlightStyle = row.highlight ? 'color: var(--primary); font-weight: bold;' : '';
+            const table = document.createElement('table');
+            table.style.cssText = "width: 100%; border-collapse: collapse; color: var(--text-muted);";
 
-        tr.innerHTML = `
-            <td style="padding: 0.5rem;">${row.model}</td>
-            <td style="text-align: center;">${row.pretrain}</td>
-            <td style="text-align: center;">${row.precision}</td>
-            <td style="text-align: center;">${row.recall}</td>
-            <td style="text-align: center; ${highlightStyle}">${row.fmeasure}</td>
-        `;
-        tbody.appendChild(tr);
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr style="border-bottom: 1px solid var(--glass-border);">
+                    <th style="text-align: left; padding: 0.5rem;">Model</th>
+                    <th style="text-align: center; padding: 0.5rem;">Pretrain</th>
+                    <th style="text-align: center; padding: 0.5rem;">Precision</th>
+                    <th style="text-align: center; padding: 0.5rem;">Recall</th>
+                    <th style="text-align: center; padding: 0.5rem;">F-Measure</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            item.data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+                const highlightStyle = row.highlight ? 'color: var(--primary); font-weight: bold;' : '';
+                tr.innerHTML = `
+                    <td style="padding: 0.5rem;">${row.model}</td>
+                    <td style="text-align: center;">${row.pretrain}</td>
+                    <td style="text-align: center;">${row.precision}</td>
+                    <td style="text-align: center;">${row.recall}</td>
+                    <td style="text-align: center; ${highlightStyle}">${row.fmeasure}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            div.appendChild(table);
+
+            const p = document.createElement('p');
+            p.style.cssText = "margin-top: 1rem; font-size: 0.9rem;";
+            p.textContent = item.caption;
+            div.appendChild(p);
+
+        } else if (item.type === 'image') {
+            div.innerHTML = `
+                <img src="${item.src}" alt="${item.alt}" style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
+                <p style="text-align:center; font-size:0.9rem;">${item.caption}</p>
+            `;
+        } else if (item.type === 'comparison') {
+            const flexDiv = document.createElement('div');
+            flexDiv.style.cssText = "display: flex; gap: 0.5rem;";
+            item.images.forEach(img => {
+                flexDiv.innerHTML += `<img src="${img.src}" alt="${img.alt}" style="width: 48%; border-radius: 8px;">`;
+            });
+            div.appendChild(flexDiv);
+
+            const p = document.createElement('p');
+            p.style.cssText = "text-align:center; margin-top:0.5rem; font-size:0.9rem;";
+            p.textContent = item.caption;
+            div.appendChild(p);
+        }
+
+        grid.appendChild(div);
     });
-    table.appendChild(tbody);
-
-    // Insert after title
-    const title = container.querySelector('h3');
-    title.after(table);
-
-    // Caption
-    const p = document.createElement('p');
-    p.style.cssText = "margin-top: 1rem; font-size: 0.9rem;";
-    p.textContent = projectData.results.caption;
-    container.appendChild(p);
 }
 
 function renderCitation() {
