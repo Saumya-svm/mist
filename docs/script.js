@@ -194,6 +194,15 @@ function renderHeader() {
     });
     header.appendChild(affDiv);
 
+    // Logos
+    const logosDiv = document.createElement('div');
+    logosDiv.className = 'logos';
+    logosDiv.innerHTML = `
+        <img src="images/IIIT_Hyderabad_Logo-e1655116937986.jpg" alt="IIIT Hyderabad Logo">
+        <img src="images/cvit_new.png" alt="CVIT Logo">
+    `;
+    header.appendChild(logosDiv);
+
     // Links
     const linksDiv = document.createElement('div');
     linksDiv.className = 'links';

@@ -19,7 +19,7 @@
 
 /* Light mode */
 body.light-mode {
-    --bg-main: #f5f5f7;
+    --bg-main: #ffffff;
     --bg-surface: #ffffff;
     --text-main: #1d1d1f;
     --text-secondary: #424245;
@@ -129,7 +129,33 @@ h1 {
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-size: 0.75rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Logo Section */
+.logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.logos img {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logos img:hover {
+    transform: scale(1.05);
+}
+
+/* Light mode logo adjustments */
+body.light-mode .logos img {
+    filter: brightness(0.9);
 }
 
 /* Buttons */
@@ -317,5 +343,15 @@ tr:hover td {
     /* Adjust grid layouts for mobile */
     .characteristics-content > div[style*="grid-template-columns: repeat(5, 1fr)"] {
         grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Stack logos vertically on mobile */
+    .logos {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .logos img {
+        height: 80px;
     }
 }
