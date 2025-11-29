@@ -1,13 +1,11 @@
 const projectData = {
     title: "MIST: Multilingual Incidental Dataset for Scene Text Detection",
     authors: [
-        { name: "Saumya Mundra", affiliation: 1 },
-        { name: "Ajoy Mondal", affiliation: 1 },
-        { name: "C.V. Jawahar", affiliation: 1 }
+        { name: "Saumya Mundra" },
+        { name: "Ajoy Mondal" },
+        { name: "C.V. Jawahar" }
     ],
-    affiliations: [
-        { id: 1, name: "CVIT, IIIT Hyderabad, India" }
-    ],
+    affiliation: "CVIT, IIIT Hyderabad, India",
     links: [
         { name: "Paper", icon: "fas fa-file-pdf", url: "#" },
         { name: "arXiv", icon: "fab fa-arxiv", url: "#" },
@@ -180,18 +178,10 @@ function renderHeader() {
     });
     header.appendChild(authorsDiv);
 
-    // Affiliations
+    // Affiliation (single institution)
     const affDiv = document.createElement('div');
     affDiv.className = 'affiliations';
-    projectData.affiliations.forEach((aff, index) => {
-        const sup = document.createElement('sup');
-        sup.textContent = aff.id;
-        affDiv.appendChild(sup);
-        affDiv.appendChild(document.createTextNode(aff.name));
-        if (index < projectData.affiliations.length - 1) {
-            affDiv.appendChild(document.createTextNode(', '));
-        }
-    });
+    affDiv.textContent = projectData.affiliation;
     header.appendChild(affDiv);
 
     // Logos
