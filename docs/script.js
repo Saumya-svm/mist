@@ -283,7 +283,7 @@ function renderCharacteristics() {
             <td style="padding: 1.25rem 1rem; font-family: 'Courier New', monospace; font-size: 1rem; color: var(--text-main);">${metric.imageLevel}</td>
             <td style="padding: 1.25rem 1rem; font-family: 'Courier New', monospace; font-size: 1rem; color: var(--text-main);">${metric.datasetLevel}</td>
         `;
-        tbody.appendChild(tr);
+        metricsTableBody.appendChild(tr);
     });
     metricsTable.appendChild(metricsTableBody);
     container.appendChild(metricsTable);
