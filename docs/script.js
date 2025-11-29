@@ -174,10 +174,6 @@ function renderHeader() {
         a.textContent = author.name;
         authorsDiv.appendChild(a);
 
-        const sup = document.createElement('sup');
-        sup.textContent = author.affiliation;
-        authorsDiv.appendChild(sup);
-
         if (index < projectData.authors.length - 1) {
             authorsDiv.appendChild(document.createTextNode(', '));
         }
