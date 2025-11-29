@@ -536,8 +536,8 @@ function initThemeToggle() {
     const toggleBtn = document.getElementById('theme-toggle');
     if (!toggleBtn) return;
 
-    // Check for saved theme preference or default to dark mode
-    const currentTheme = localStorage.getItem('theme') || 'dark';
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
     if (currentTheme === 'light') {
         document.body.classList.add('light-mode');
         toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
