@@ -39,20 +39,6 @@ const projectData = {
                     { model: "DB++", pretrain: "Syn", precision: "72.84", recall: "39.73", fmeasure: "51.42" }
                 ],
                 caption: "Benchmarking results on MIST. DP-DETR achieves the best performance, but overall scores suggest significant room for improvement in handling incidental scenes."
-            },
-            {
-                type: "image",
-                src: "images/result_vis.png",
-                alt: "Visual Results",
-                caption: "Visual detection results on MIST"
-            },
-            {
-                type: "comparison",
-                images: [
-                    { src: "images/mlt17.png", alt: "MLT17 Distribution" },
-                    { src: "images/totaltext.png", alt: "TotalText Distribution" }
-                ],
-                caption: "Distribution comparisons (MLT17 vs Total-Text)"
             }
         ]
     },
@@ -237,8 +223,13 @@ function renderMethod() {
 }
 
 function renderCharacteristics() {
+    console.log("MIST: Rendering characteristics...");
     const container = document.querySelector('#characteristics .characteristics-content');
-    if (!container) return;
+    console.log("Characteristics container:", container);
+    if (!container) {
+        console.error("Characteristics container not found!");
+        return;
+    }
 
     // Intro
     const intro = document.createElement('p');
