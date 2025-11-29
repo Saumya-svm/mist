@@ -142,6 +142,10 @@ function init() {
         initInteractions();
     } catch (e) { console.error("Error initializing interactions:", e); }
 
+    try {
+        initThemeToggle();
+    } catch (e) { console.error("Error initializing theme toggle:", e); }
+
     console.log("MIST: Initialization complete.");
 }
 
@@ -524,4 +528,29 @@ function initInteractions() {
             }
         });
     }
+}
+
+function initThemeToggle() {
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (!toggleBtn) return;
+
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-mode');
+        toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+
+        // Update icon and save preference
+        if (document.body.classList.contains('light-mode')) {
+            toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem('theme', 'light');
+        } else {
+            toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem('theme', 'dark');
+        }
+    });
 }
