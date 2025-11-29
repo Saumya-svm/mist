@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Title: Amazing Research Paper</title>
-    <meta name="description" content="Project page for Amazing Research Paper">
-    
+    <title>MIST: Multilingual Incidental Dataset for Scene Text Detection</title>
+    <meta name="description" content="Project page for MIST: Multilingual Incidental Dataset for Scene Text Detection">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>Project Title: Amazing Research Paper</h1>
-            
+            <h1>MIST: Multilingual Incidental Dataset for Scene Text Detection</h1>
+
             <div class="authors">
-                <a href="#" class="author-name">Author One</a><sup>1</sup>,
-                <a href="#" class="author-name">Author Two</a><sup>1</sup>,
-                <a href="#" class="author-name">Author Three</a><sup>2</sup>
+                <a href="#" class="author-name">First Author</a><sup>1</sup>,
+                <a href="#" class="author-name">Second Author</a><sup>2</sup>
             </div>
-            
+
             <div class="affiliations">
                 <sup>1</sup>Institution One, <sup>2</sup>Institution Two
             </div>
@@ -33,58 +36,125 @@
                 <a href="#" class="btn"><i class="fas fa-file-pdf"></i> Paper</a>
                 <a href="#" class="btn"><i class="fab fa-arxiv"></i> arXiv</a>
                 <a href="#" class="btn"><i class="fab fa-github"></i> Code</a>
-                <a href="#" class="btn"><i class="fas fa-database"></i> Data</a>
+                <a href="#" class="btn"><i class="fas fa-database"></i> Dataset</a>
             </div>
         </header>
 
         <section id="abstract">
             <h2>Abstract</h2>
             <p class="abstract-text">
-                This is a placeholder for the abstract of your paper. Describe the problem you are solving, your proposed method, and the key results. 
-                Make it concise and engaging to encourage visitors to read the full paper. 
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Scene text detection has progressed rapidly, largely driven by curated datasets and benchmarks. However,
+                many of these have reached evaluation saturation and are heavily biased toward focused scenes, limiting
+                their effectiveness in real-world environments where detection is hindered by environmental factors. To
+                address this, we introduce <strong>MIST</strong> -- a <strong>M</strong>ultilingual
+                <strong>I</strong>ncidental <strong>S</strong>cene <strong>T</strong>ext dataset featuring diverse text
+                instances across 11 languages. MIST provides language, transcription, legibility, and fine-grained
+                polygon-shaped annotations across 12K scene images and 600K word-level text instances. Images are
+                captured along roads using a GoPro mounted on a moving car to capture real-world complexities, ensuring
+                the scenes are <strong>incidental</strong> rather than deliberately framed. MIST establishes a new
+                challenging benchmark to enable robust evaluation of scene text detection methods in real-world
+                scenarios.
             </p>
         </section>
 
-        <section id="video">
-            <h2>Video Demo</h2>
-            <div class="teaser-video">
-                <!-- Placeholder for video or GIF -->
-                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; background:#222;">
-                    <i class="fas fa-play-circle" style="font-size: 3rem;"></i>
-                </div>
-            </div>
-        </section>
-
         <section id="method">
-            <h2>Method</h2>
+            <h2>The MIST Dataset</h2>
             <div class="method-overview">
-                <!-- Placeholder for method diagram -->
-                <div style="width:100%; height:300px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888; margin-bottom:1rem;">
-                    Method Diagram Placeholder
+                <!-- Teaser Image -->
+                <div style="padding: 2rem; background: rgba(255,255,255,0.05); text-align: center;">
+                    <img src="images/teaser.svg" alt="MIST Dataset Examples"
+                        style="max-width: 100%; border-radius: 8px;">
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                        Diverse and complex text instances in MIST, including multilingual, occluded, motion-blurred,
+                        and perspective text.
+                    </p>
                 </div>
-                <p>
-                    Explain your method here. You can use diagrams or figures to illustrate the architecture or pipeline.
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                </p>
+                <div style="padding: 2rem;">
+                    <p>
+                        <strong>MIST</strong> comprises <strong>12K scene images</strong> containing <strong>576K text
+                            instances</strong> across <strong>11 scripts</strong> (English, Bengali, Gujarati, Hindi,
+                        Kannada, Malayalam, Marathi, Oriya, Punjabi, Tamil, and Telugu). Each image is high-resolution
+                        (1920×1080).
+                    </p>
+                    <p>
+                        To ensure temporal and regional diversity, we enforced per-region and per-sequence quotas and
+                        sampled uniformly over time. The dataset is split into training, validation, and testing
+                        (benchmark) sets in a 4:1:1 ratio.
+                    </p>
+                    <p>
+                        MIST is designed to be highly <strong>incidental</strong>. We quantify this using metrics like
+                        \(M_3\) (average area of text instance relative to image), where MIST shows significantly
+                        smaller text instances compared to existing focused datasets, mirroring real-world complexity.
+                    </p>
+                </div>
             </div>
         </section>
 
         <section id="results">
-            <h2>Results</h2>
+            <h2>Benchmark Results</h2>
             <div class="results-grid">
-                <div class="result-item">
-                    <div style="width:100%; height:200px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888;">Result 1</div>
-                    <p style="text-align:center; margin-top:0.5rem; font-size:0.9rem;">Caption for result 1</p>
+                <div class="result-item" style="grid-column: span 2;">
+                    <h3 style="font-family: var(--font-heading); margin-bottom: 1rem; color: var(--text-main);">
+                        Performance Comparison</h3>
+                    <table style="width: 100%; border-collapse: collapse; color: var(--text-muted);">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--glass-border);">
+                                <th style="text-align: left; padding: 0.5rem;">Model</th>
+                                <th style="text-align: center; padding: 0.5rem;">Pretrain</th>
+                                <th style="text-align: center; padding: 0.5rem;">Precision</th>
+                                <th style="text-align: center; padding: 0.5rem;">Recall</th>
+                                <th style="text-align: center; padding: 0.5rem;">F-Measure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem;">DP-DETR</td>
+                                <td style="text-align: center;">Syn</td>
+                                <td style="text-align: center;">69.61</td>
+                                <td style="text-align: center;">57.04</td>
+                                <td style="text-align: center; color: var(--primary); font-weight: bold;">62.70</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem;">TBPN</td>
+                                <td style="text-align: center;">MLT</td>
+                                <td style="text-align: center;">70.87</td>
+                                <td style="text-align: center;">47.75</td>
+                                <td style="text-align: center;">57.06</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem;">MixNet</td>
+                                <td style="text-align: center;">Syn</td>
+                                <td style="text-align: center;">73.48</td>
+                                <td style="text-align: center;">45.59</td>
+                                <td style="text-align: center;">56.27</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem;">DB++</td>
+                                <td style="text-align: center;">Syn</td>
+                                <td style="text-align: center;">72.84</td>
+                                <td style="text-align: center;">39.73</td>
+                                <td style="text-align: center;">51.42</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        Benchmarking results on MIST. DP-DETR achieves the best performance, but overall scores suggest
+                        significant room for improvement in handling incidental scenes.
+                    </p>
                 </div>
                 <div class="result-item">
-                    <div style="width:100%; height:200px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888;">Result 2</div>
-                    <p style="text-align:center; margin-top:0.5rem; font-size:0.9rem;">Caption for result 2</p>
+                    <img src="images/result_vis.png" alt="Visual Results"
+                        style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
+                    <p style="text-align:center; font-size:0.9rem;">Visual detection results on MIST</p>
                 </div>
                 <div class="result-item">
-                    <div style="width:100%; height:200px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888;">Result 3</div>
-                    <p style="text-align:center; margin-top:0.5rem; font-size:0.9rem;">Caption for result 3</p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <img src="images/mlt17.png" alt="MLT17 Distribution" style="width: 48%; border-radius: 8px;">
+                        <img src="images/totaltext.png" alt="TotalText Distribution"
+                            style="width: 48%; border-radius: 8px;">
+                    </div>
+                    <p style="text-align:center; margin-top:0.5rem; font-size:0.9rem;">Distribution comparisons (MLT17
+                        vs Total-Text)</p>
                 </div>
             </div>
         </section>
@@ -93,20 +163,22 @@
             <h2>Citation</h2>
             <div class="citation-block">
                 <button class="copy-btn">Copy</button>
-                <pre><code>@article{author2024project,
-  title={Project Title: Amazing Research Paper},
-  author={One, Author and Two, Author and Three, Author},
-  journal={arXiv preprint arXiv:2401.00000},
-  year={2024}
+                <pre><code>@article{mist2025,
+  title={MIST: Multilingual Incidental Dataset for Scene Text Detection},
+  author={First Author and Second Author},
+  journal={WACV},
+  year={2026}
 }</code></pre>
             </div>
         </section>
 
         <footer>
-            <p>Project page template inspired by <a href="https://github.com/nerfies/nerfies.github.io" style="color:#666;">Nerfies</a>.</p>
+            <p>Project page template inspired by <a href="https://github.com/nerfies/nerfies.github.io"
+                    style="color: var(--primary);">Nerfies</a>.</p>
         </footer>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
