@@ -238,12 +238,15 @@ function renderMethod() {
     descDiv.style.padding = "2rem";
     projectData.method.description.forEach(text => {
         const p = document.createElement('p');
-        // Fix LaTeX M3 to HTML
-        const processedText = text.replace(/\\\(M_3\\\)/g, "<i>M<sub>3</sub></i>");
-        p.innerHTML = processedText;
+        p.innerHTML = text;
         descDiv.appendChild(p);
     });
     container.appendChild(descDiv);
+    
+    // Trigger MathJax typesetting for method description
+    if (window.MathJax) {
+        MathJax.typesetPromise([descDiv]).catch((err) => console.log('MathJax error:', err));
+    }
 }
 
 function renderCharacteristics() {
@@ -260,6 +263,11 @@ function renderCharacteristics() {
     intro.innerHTML = projectData.characteristics.intro;
     intro.style.cssText = "margin-bottom: 2rem; font-size: 1.05rem; line-height: 1.7;";
     container.appendChild(intro);
+    
+    // Trigger MathJax typesetting for intro
+    if (window.MathJax) {
+        MathJax.typesetPromise([intro]).catch((err) => console.log('MathJax error:', err));
+    }
 
     // Metrics Table
     const metricsTitle = document.createElement('h3');
@@ -303,7 +311,8 @@ function renderCharacteristics() {
 
     projectData.characteristics.metricsTable.forEach((metric, index) => {
         const p = document.createElement('p');
-        p.innerHTML = `<strong>$m_${index + 1}$ / $M_${index + 1}$:</strong> ${metric.description}`;
+        const metricNum = index + 1;
+        p.innerHTML = `<strong>\\(m_{${metricNum}}\\) / \\(M_{${metricNum}}\\):</strong> ${metric.description}`;
         p.style.cssText = "margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;";
         descriptionsDiv.appendChild(p);
     });
@@ -373,36 +382,19 @@ function renderCharacteristics() {
     m1Title.style.cssText = "font-family: var(--font-heading); margin: 3rem 0 1.5rem; font-size: 1.3rem; text-align: center;";
     container.appendChild(m1Title);
 
-    const m1Container = document.createElement('div');
-    m1Container.style.cssText = "display: grid; grid-template-columns: 1fr 3fr; gap: 1.5rem; margin-bottom: 1rem;";
+    const m1Grid = document.createElement('div');
+    m1Grid.style.cssText = "display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; margin-bottom: 1rem;";
 
-    // Left column: Mean comparison (spans all 3 rows)
-    const meanDiv = document.createElement('div');
-    meanDiv.style.cssText = "display: flex; flex-direction: column; justify-content: center; align-items: center;";
-    const meanComparison = projectData.characteristics.m1Figures[9]; // Last item is mean comparison
-    meanDiv.innerHTML = `
-        <img src="${meanComparison.src}" alt="${meanComparison.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-main); font-weight: 600;">${meanComparison.label}</p>
-    `;
-    m1Container.appendChild(meanDiv);
-
-    // Right column: 3x3 grid of individual datasets
-    const datasetsGrid = document.createElement('div');
-    datasetsGrid.style.cssText = "display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;";
-
-    // First 9 items (excluding the mean comparison)
-    projectData.characteristics.m1Figures.slice(0, 9).forEach(fig => {
+    projectData.characteristics.m1Figures.forEach(fig => {
         const div = document.createElement('div');
         div.style.cssText = "text-align: center;";
         div.innerHTML = `
-            <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
-            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">${fig.label}</p>
+            <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--border);">
+            <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">${fig.label}</p>
         `;
-        datasetsGrid.appendChild(div);
+        m1Grid.appendChild(div);
     });
-    m1Container.appendChild(datasetsGrid);
-
-    container.appendChild(m1Container);
+    container.appendChild(m1Grid);
 
     const m1Caption = document.createElement('p');
     m1Caption.innerHTML = "Compares the <strong>distribution of text instances in scene images (M₁)</strong> of MIST against existing datasets.";
@@ -422,7 +414,7 @@ function renderCharacteristics() {
         const div = document.createElement('div');
         div.style.cssText = "text-align: center;";
         div.innerHTML = `
-            <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
+            <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--border);">
             <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">${fig.label}</p>
         `;
         m3Grid.appendChild(div);
