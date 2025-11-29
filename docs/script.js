@@ -56,6 +56,47 @@ const projectData = {
             }
         ]
     },
+    characteristics: {
+        intro: "We define metrics to quantify the incidental nature of scene text datasets. MIST proves to be the most incidental, with significantly more text instances per image and smaller text scales compared to existing datasets.",
+        metrics: [
+            {
+                name: "M₁",
+                description: "Average number of text instances per image. Higher values indicate more text-dense scenes.",
+                formula: "M₁ = (1/|D|) Σ N_i"
+            },
+            {
+                name: "M₂",
+                description: "Instance-weighted mean area proportion of text relative to image. Lower values indicate smaller text.",
+                formula: "M₂ = (1/ΣN_i) ΣΣ (A_t / A_I)"
+            },
+            {
+                name: "M₃",
+                description: "Average area proportion of text per image. Lower M₃ indicates higher incidentalness.",
+                formula: "M₃ = (1/|D|) Σ (Σ A_t / A_I·N_i)"
+            }
+        ],
+        comparisonTable: [
+            { dataset: "Total-Text", m1: 6, m2: "0.01093", m3: "0.01747", images: "1,555", instances: "9,330" },
+            { dataset: "CTW1500", m1: 8, m2: "0.01796", m3: "0.02778", images: "1,500", instances: "12,000" },
+            { dataset: "MLT17", m1: 12, m2: "0.01017", m3: "0.02893", images: "18,000", instances: "216,000" },
+            { dataset: "ICDAR-ArT", m1: 11, m2: "0.01230", m3: "0.02174", images: "10,166", instances: "111,826" },
+            { dataset: "ICDAR15", m1: 12, m2: "0.00204", m3: "0.00300", images: "1,500", instances: "18,000" },
+            { dataset: "COCO-Text", m1: 5, m2: "0.00344", m3: "0.00613", images: "63,686", instances: "318,430" },
+            { dataset: "MLT19", m1: 11, m2: "0.01125", m3: "0.03261", images: "20,000", instances: "220,000" },
+            { dataset: "LSVT", m1: 13, m2: "0.01270", m3: "0.00750", images: "30,000", instances: "390,000" },
+            { dataset: "Uber-Text", m1: "3.46", m2: "0.00277", m3: "0.00230", images: "82,572", instances: "285,699" },
+            { dataset: "DOST", m1: "32.77", m2: "0.00090", m3: "0.00110", images: "338", instances: "11,076", highlight: "second" },
+            { dataset: "MIST (ours)", m1: 48, m2: "0.00067", m3: "0.00084", images: "12,000", instances: "576,000", highlight: "best" }
+        ],
+        analysis: [
+            "MIST displays a <strong>well-balanced</strong> and <strong>dense</strong> text distribution compared to existing datasets. With M₁ = 48, MIST has approximately <strong>4× the text density</strong> of ICDAR15 and <strong>6× that of COCO-Text</strong>.",
+            "The M₃ metric reveals MIST's highly incidental nature. MIST's average M₃ is <strong>15-20× smaller</strong> than focused datasets and <strong>4× smaller</strong> than incidental counterparts, indicating significantly smaller text instances that mirror real-world complexity."
+        ],
+        visualizations: [
+            { src: "images/m1_comparison.png", caption: "M₁ distribution comparison across datasets" },
+            { src: "images/m1_histogram.png", caption: "Text instance density histogram" }
+        ]
+    },
     citation: `@article{mist2025,
   title={MIST: Multilingual Incidental Dataset for Scene Text Detection},
   author={First Author and Second Author},
@@ -78,6 +119,10 @@ function init() {
     try {
         renderMethod();
     } catch (e) { console.error("Error rendering method:", e); }
+
+    try {
+        renderCharacteristics();
+    } catch (e) { console.error("Error rendering characteristics:", e); }
 
     try {
         renderResults();
@@ -189,6 +234,100 @@ function renderMethod() {
         descDiv.appendChild(p);
     });
     container.appendChild(descDiv);
+}
+
+function renderCharacteristics() {
+    const container = document.querySelector('#characteristics .characteristics-content');
+    if (!container) return;
+
+    // Intro
+    const intro = document.createElement('p');
+    intro.innerHTML = projectData.characteristics.intro;
+    intro.style.cssText = "margin-bottom: 2rem; font-size: 1.1rem;";
+    container.appendChild(intro);
+
+    // Metrics Cards
+    const metricsGrid = document.createElement('div');
+    metricsGrid.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;";
+
+    projectData.characteristics.metrics.forEach(metric => {
+        const card = document.createElement('div');
+        card.style.cssText = "background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border);";
+        card.innerHTML = `
+            <h3 style="font-family: var(--font-heading); color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;">${metric.name}</h3>
+            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.75rem; font-family: monospace;">${metric.formula}</p>
+            <p style="font-size: 0.95rem; color: var(--text-muted);">${metric.description}</p>
+        `;
+        metricsGrid.appendChild(card);
+    });
+    container.appendChild(metricsGrid);
+
+    // Comparison Table
+    const tableTitle = document.createElement('h3');
+    tableTitle.textContent = "Dataset Comparison";
+    tableTitle.style.cssText = "font-family: var(--font-heading); margin: 2rem 0 1rem; font-size: 1.3rem;";
+    container.appendChild(tableTitle);
+
+    const table = document.createElement('table');
+    table.style.cssText = "width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; font-size: 0.9rem;";
+
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            <th style="text-align: left; padding: 0.75rem;">Dataset</th>
+            <th style="text-align: center; padding: 0.75rem;">M₁↑</th>
+            <th style="text-align: center; padding: 0.75rem;">M₂↓</th>
+            <th style="text-align: center; padding: 0.75rem;">M₃↓</th>
+            <th style="text-align: center; padding: 0.75rem;">#Images</th>
+            <th style="text-align: center; padding: 0.75rem;">#Instances</th>
+        </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    projectData.characteristics.comparisonTable.forEach(row => {
+        const tr = document.createElement('tr');
+        let rowStyle = "background: rgba(255,255,255,0.02);";
+        if (row.highlight === "best") rowStyle = "background: rgba(139, 92, 246, 0.1); font-weight: 600;";
+        if (row.highlight === "second") rowStyle = "background: rgba(139, 92, 246, 0.05);";
+
+        tr.innerHTML = `
+            <td style="padding: 0.75rem; ${rowStyle} border-radius: 10px 0 0 10px;">${row.dataset}</td>
+            <td style="text-align: center; padding: 0.75rem; ${rowStyle}">${row.m1}</td>
+            <td style="text-align: center; padding: 0.75rem; ${rowStyle}">${row.m2}</td>
+            <td style="text-align: center; padding: 0.75rem; ${rowStyle}">${row.m3}</td>
+            <td style="text-align: center; padding: 0.75rem; ${rowStyle}">${row.images}</td>
+            <td style="text-align: center; padding: 0.75rem; ${rowStyle} border-radius: 0 10px 10px 0;">${row.instances}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    // Analysis
+    const analysisDiv = document.createElement('div');
+    analysisDiv.style.cssText = "margin: 2rem 0;";
+    projectData.characteristics.analysis.forEach(text => {
+        const p = document.createElement('p');
+        p.innerHTML = text;
+        p.style.marginBottom = "1rem";
+        analysisDiv.appendChild(p);
+    });
+    container.appendChild(analysisDiv);
+
+    // Visualizations
+    const vizGrid = document.createElement('div');
+    vizGrid.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem;";
+
+    projectData.characteristics.visualizations.forEach(viz => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <img src="${viz.src}" alt="${viz.caption}" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border);">
+            <p style="text-align: center; margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">${viz.caption}</p>
+        `;
+        vizGrid.appendChild(div);
+    });
+    container.appendChild(vizGrid);
 }
 
 function renderResults() {
