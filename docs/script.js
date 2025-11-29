@@ -64,18 +64,41 @@ const projectData = {
 }`
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+// Main initialization
+function init() {
+    console.log("MIST: Initializing...");
     try {
         renderHeader();
+    } catch (e) { console.error("Error rendering header:", e); }
+
+    try {
         renderAbstract();
+    } catch (e) { console.error("Error rendering abstract:", e); }
+
+    try {
         renderMethod();
+    } catch (e) { console.error("Error rendering method:", e); }
+
+    try {
         renderResults();
+    } catch (e) { console.error("Error rendering results:", e); }
+
+    try {
         renderCitation();
+    } catch (e) { console.error("Error rendering citation:", e); }
+
+    try {
         initInteractions();
-    } catch (e) {
-        console.error("Error rendering page:", e);
-    }
-});
+    } catch (e) { console.error("Error initializing interactions:", e); }
+
+    console.log("MIST: Initialization complete.");
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 
 function renderHeader() {
     const header = document.querySelector('header');
