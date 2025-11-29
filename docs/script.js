@@ -1,12 +1,12 @@
 const projectData = {
     title: "MIST: Multilingual Incidental Dataset for Scene Text Detection",
     authors: [
-        { name: "First Author", affiliation: 1 },
-        { name: "Second Author", affiliation: 2 }
+        { name: "Saumya Mundra", affiliation: 1 },
+        { name: "Ajoy Mondal", affiliation: 1 },
+        { name: "C.V. Jawahar", affiliation: 1 }
     ],
     affiliations: [
-        { id: 1, name: "Institution One" },
-        { id: 2, name: "Institution Two" }
+        { id: 1, name: "CVIT, IIIT Hyderabad, India" }
     ],
     links: [
         { name: "Paper", icon: "fas fa-file-pdf", url: "#" },
@@ -78,14 +78,34 @@ const projectData = {
             "MIST displays a <strong>well-balanced</strong> and <strong>dense</strong> text distribution compared to existing datasets. With M₁ = 48, MIST has approximately <strong>4× the text density</strong> of ICDAR15 and <strong>6× that of COCO-Text</strong>.",
             "The M₃ metric reveals MIST's highly incidental nature. MIST's average M₃ is <strong>15-20× smaller</strong> than focused datasets and <strong>4× smaller</strong> than incidental counterparts, indicating significantly smaller text instances that mirror real-world complexity."
         ],
-        visualizations: [
-            { src: "images/m1_comparison.png", caption: "M₁ distribution comparison across datasets" },
-            { src: "images/m1_histogram.png", caption: "Text instance density histogram" }
+        m1Figures: [
+            { src: "images/m1_totaltext.png", label: "Total-Text" },
+            { src: "images/m1_ctw1500.png", label: "CTW1500" },
+            { src: "images/m1_mlt17.png", label: "MLT17" },
+            { src: "images/m1_icdarart.png", label: "ICDAR-ArT" },
+            { src: "images/m1_icdar15.png", label: "ICDAR15" },
+            { src: "images/m1_coco.png", label: "COCO-Text" },
+            { src: "images/m1_mlt19.png", label: "MLT19" },
+            { src: "images/m1_roadtext.png", label: "RoadText-1K" },
+            { src: "images/m1_lsvt.png", label: "LSVT" },
+            { src: "images/m1_comparison.png", label: "Mean Comparison" }
+        ],
+        m3Figures: [
+            { src: "images/m3_totaltext.png", label: "Total-Text" },
+            { src: "images/m3_ctw1500.png", label: "CTW1500" },
+            { src: "images/m3_mlt17.png", label: "MLT17" },
+            { src: "images/m3_icdarart.png", label: "ICDAR-ArT" },
+            { src: "images/m3_icdar15.png", label: "ICDAR15" },
+            { src: "images/m3_coco.png", label: "COCO-Text" },
+            { src: "images/m3_mlt19.png", label: "MLT19" },
+            { src: "images/m3_roadtext.png", label: "RoadText-1K" },
+            { src: "images/m3_lsvt.png", label: "LSVT" },
+            { src: "images/m3_comparison.png", label: "Mean Comparison" }
         ]
     },
     citation: `@article{mist2025,
   title={MIST: Multilingual Incidental Dataset for Scene Text Detection},
-  author={First Author and Second Author},
+  author={Mundra, Saumya and Mondal, Ajoy and Jawahar, C.V.},
   journal={WACV},
   year={2026}
 }`
@@ -306,19 +326,55 @@ function renderCharacteristics() {
     });
     container.appendChild(analysisDiv);
 
-    // Visualizations
-    const vizGrid = document.createElement('div');
-    vizGrid.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem;";
+    // M1 Distribution Figures
+    const m1Title = document.createElement('h3');
+    m1Title.textContent = "M₁ Distribution: Text Instances per Image";
+    m1Title.style.cssText = "font-family: var(--font-heading); margin: 3rem 0 1.5rem; font-size: 1.3rem; text-align: center;";
+    container.appendChild(m1Title);
 
-    projectData.characteristics.visualizations.forEach(viz => {
+    const m1Grid = document.createElement('div');
+    m1Grid.style.cssText = "display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;";
+
+    projectData.characteristics.m1Figures.forEach(fig => {
         const div = document.createElement('div');
+        div.style.cssText = "text-align: center;";
         div.innerHTML = `
-            <img src="${viz.src}" alt="${viz.caption}" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border);">
-            <p style="text-align: center; margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">${viz.caption}</p>
+            <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
+            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">${fig.label}</p>
         `;
-        vizGrid.appendChild(div);
+        m1Grid.appendChild(div);
     });
-    container.appendChild(vizGrid);
+    container.appendChild(m1Grid);
+
+    const m1Caption = document.createElement('p');
+    m1Caption.innerHTML = "Compares the <strong>distribution of text instances in scene images (M₁)</strong> of MIST against existing datasets.";
+    m1Caption.style.cssText = "text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem;";
+    container.appendChild(m1Caption);
+
+    // M3 Distribution Figures
+    const m3Title = document.createElement('h3');
+    m3Title.textContent = "M₃ Distribution: Average Text Instance Area";
+    m3Title.style.cssText = "font-family: var(--font-heading); margin: 3rem 0 1.5rem; font-size: 1.3rem; text-align: center;";
+    container.appendChild(m3Title);
+
+    const m3Grid = document.createElement('div');
+    m3Grid.style.cssText = "display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; margin-bottom: 1rem;";
+
+    projectData.characteristics.m3Figures.forEach(fig => {
+        const div = document.createElement('div');
+        div.style.cssText = "text-align: center;";
+        div.innerHTML = `
+            <img src="${fig.src}" alt="${fig.label}" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border);">
+            <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">${fig.label}</p>
+        `;
+        m3Grid.appendChild(div);
+    });
+    container.appendChild(m3Grid);
+
+    const m3Caption = document.createElement('p');
+    m3Caption.innerHTML = "Comparison of the <strong>average area of a text instance relative to the scene image (M₃)</strong> in MIST against other benchmarks. The analysis employs kernel density estimation with logarithmic scales.";
+    m3Caption.style.cssText = "text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem;";
+    container.appendChild(m3Caption);
 }
 
 function renderResults() {
