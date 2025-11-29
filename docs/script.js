@@ -43,22 +43,22 @@ const projectData = {
         ]
     },
     characteristics: {
-        intro: "We define metrics to quantify the incidental nature of scene text datasets. For a single image <i>I</i>, <i>T</i> denotes its set of text instances (<i>N</i>=|<i>T</i>|), <i>A<sub>t</sub></i> the area of an instance <i>t</i> ∈ <i>T</i>, and <i>A<sub>I</sub></i> the image area. For a dataset <i>D</i>={<i>I<sub>i</sub></i>}, <i>T<sub>i</sub></i> and <i>N<sub>i</sub></i>=|<i>T<sub>i</sub></i>| denote the instances and count for image <i>I<sub>i</sub></i>.",
+        intro: "We define metrics to quantify the incidental nature of scene text datasets. For a single image $I$, $T$ denotes its set of text instances ($N=|T|$), $A_t$ the area of an instance $t \\in T$, and $A_I$ the image area. For a dataset $D=\\{I_i\\}$, $T_i$ and $N_i=|T_i|$ denote the instances and count for image $I_i$.",
         metricsTable: [
             {
-                imageLevel: "m<sub>1</sub> = N",
-                datasetLevel: "M<sub>1</sub> = <sup>1</sup>/<sub>|D|</sub> Σ<sub>i∈D</sub> m<sub>1</sub><sup>(i)</sup>",
-                description: "m<sub>1</sub> counts text instances in a single image, whereas M<sub>1</sub> averages this count over the dataset. Typically, m<sub>1</sub><sup>H</sup> > m<sub>1</sub><sup>F</sup> and M<sub>1</sub><sup>H</sup> > M<sub>1</sub><sup>F</sup>."
+                imageLevel: "$m_1 = N$",
+                datasetLevel: "$M_1 = \\frac{1}{|D|}\\sum_{i\\in D} m_1^{(i)}$",
+                description: "$m_1$ counts text instances in a single image, whereas $M_1$ averages this count over the dataset. Typically, $m_1^H > m_1^F$ and $M_1^H > M_1^F$."
             },
             {
-                imageLevel: "m<sub>2</sub> = <sup>A<sub>t</sub></sup>/<sub>A<sub>I</sub></sub>, ∀ t∈T",
-                datasetLevel: "M<sub>2</sub> = <sup>1</sup>/<sub>Σ<sub>i∈D</sub>|T<sub>i</sub>|</sub> Σ<sub>i∈D</sub> Σ<sub>t∈T<sub>i</sub></sub> m<sub>2</sub><sup>(i,t)</sup>",
-                description: "m<sub>2</sub> is the per-instance area proportion, whereas M<sub>2</sub> is the instance-weighted mean over the dataset. Typically, m<sub>2</sub><sup>H</sup> < m<sub>2</sub><sup>F</sup> and M<sub>2</sub><sup>H</sup> < M<sub>2</sub><sup>F</sup>."
+                imageLevel: "$m_2 = \\frac{A_t}{A_I}, \\forall t\\in T$",
+                datasetLevel: "$M_2 = \\frac{1}{\\sum_{i\\in D}|T_i|}\\sum_{i\\in D}\\sum_{t\\in T_i} m_2^{(i,t)}$",
+                description: "$m_2$ is the per-instance area proportion, whereas $M_2$ is the instance-weighted mean over the dataset. Typically, $m_2^H < m_2^F$ and $M_2^H < M_2^F$."
             },
             {
-                imageLevel: "m<sub>3</sub> = <sup>Σ<sub>t</sub> A<sub>t</sub></sup>/<sub>A<sub>I</sub> N</sub>",
-                datasetLevel: "M<sub>3</sub> = <sup>1</sup>/<sub>|D|</sub> Σ<sub>i∈D</sub> m<sub>3</sub><sup>(i)</sup>",
-                description: "m<sub>3</sub> is the average instance area proportion within an image, whereas M<sub>3</sub> is the mean of m<sub>3</sub> across images. Typically, m<sub>3</sub><sup>H</sup> < m<sub>3</sub><sup>F</sup> and M<sub>3</sub><sup>H</sup> < M<sub>3</sub><sup>F</sup>; as m<sub>3</sub>→0 or M<sub>3</sub>→0, scene text is more incidental."
+                imageLevel: "$m_3 = \\frac{\\sum_t A_t}{A_I N}$",
+                datasetLevel: "$M_3 = \\frac{1}{|D|}\\sum_{i\\in D} m_3^{(i)}$",
+                description: "$m_3$ is the average instance area proportion within an image, whereas $M_3$ is the mean of $m_3$ across images. Typically, $m_3^H < m_3^F$ and $M_3^H < M_3^F$; as $m_3\\to 0$ or $M_3\\to 0$, scene text is more incidental."
             }
         ],
         comparisonTable: [
@@ -284,13 +284,18 @@ function renderCharacteristics() {
         const tr = document.createElement('tr');
         tr.style.borderBottom = index < projectData.characteristics.metricsTable.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none";
         tr.innerHTML = `
-            <td style="padding: 1.25rem 1rem; font-family: 'Courier New', monospace; font-size: 1rem; color: var(--text-main);">${metric.imageLevel}</td>
-            <td style="padding: 1.25rem 1rem; font-family: 'Courier New', monospace; font-size: 1rem; color: var(--text-main);">${metric.datasetLevel}</td>
+            <td style="padding: 1.25rem 1rem; font-size: 1.1rem; color: var(--text-main);">${metric.imageLevel}</td>
+            <td style="padding: 1.25rem 1rem; font-size: 1.1rem; color: var(--text-main);">${metric.datasetLevel}</td>
         `;
         metricsTableBody.appendChild(tr);
     });
     metricsTable.appendChild(metricsTableBody);
     container.appendChild(metricsTable);
+
+    // Trigger MathJax typesetting
+    if (window.MathJax) {
+        MathJax.typesetPromise([metricsTable]).catch((err) => console.log('MathJax error:', err));
+    }
 
     // Metric Descriptions
     const descriptionsDiv = document.createElement('div');
@@ -298,11 +303,16 @@ function renderCharacteristics() {
 
     projectData.characteristics.metricsTable.forEach((metric, index) => {
         const p = document.createElement('p');
-        p.innerHTML = `<strong>m<sub>${index + 1}</sub> / M<sub>${index + 1}</sub>:</strong> ${metric.description}`;
+        p.innerHTML = `<strong>$m_${index + 1}$ / $M_${index + 1}$:</strong> ${metric.description}`;
         p.style.cssText = "margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;";
         descriptionsDiv.appendChild(p);
     });
     container.appendChild(descriptionsDiv);
+
+    // Trigger MathJax typesetting for descriptions
+    if (window.MathJax) {
+        MathJax.typesetPromise([descriptionsDiv]).catch((err) => console.log('MathJax error:', err));
+    }
 
     // Comparison Table
     const tableTitle = document.createElement('h3');
