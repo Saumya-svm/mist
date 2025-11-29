@@ -8,6 +8,7 @@
     --text-main: #f5f5f5;
     --text-secondary: #a3a3a3;
     --text-muted: #737373;
+    --text-dim: #71717a;
 
     --border: #262626;
     --border-hover: #404040;
@@ -23,6 +24,7 @@ body.light-mode {
     --text-main: #1d1d1f;
     --text-secondary: #424245;
     --text-muted: #6e6e73;
+    --text-dim: #86868b;
     --primary: #0066cc;
     --accent: #5e5ce6;
     --border: #e5e5e7;
