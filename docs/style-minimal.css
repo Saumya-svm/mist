@@ -13,8 +13,8 @@
     --border: #262626;
     --border-hover: #404040;
 
-    --font-display: 'Space Grotesk', sans-serif;
-    --font-body: 'Outfit', sans-serif;
+    --font-display: 'Times New Roman', Times, serif;
+    --font-body: 'Times New Roman', Times, serif;
 }
 
 /* Light mode */
@@ -339,18 +339,18 @@ tr:hover td {
     h2 {
         font-size: 1.5rem;
     }
-    
+
     /* Adjust grid layouts for mobile */
-    .characteristics-content > div[style*="grid-template-columns: repeat(5, 1fr)"] {
+    .characteristics-content>div[style*="grid-template-columns: repeat(5, 1fr)"] {
         grid-template-columns: repeat(2, 1fr) !important;
     }
-    
+
     /* Stack logos vertically on mobile */
     .logos {
         flex-direction: column;
         gap: 20px;
     }
-    
+
     .logos img {
         height: 80px;
     }
