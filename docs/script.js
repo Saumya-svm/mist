@@ -10,7 +10,7 @@ const projectData = {
         { name: "Paper", icon: "fas fa-file-pdf", url: "#" },
         { name: "arXiv", icon: "fab fa-arxiv", url: "#" },
         { name: "Code", icon: "fab fa-github", url: "#" },
-        { name: "Dataset", icon: "fas fa-database", url: "#" }
+        { name: "Dataset", icon: "fas fa-database", url: "https://cvit.iiit.ac.in/images/datasets/mist/mist.zip" }
     ],
     abstract: `Scene text detection has progressed rapidly, largely driven by curated datasets and benchmarks. However, many of these have reached evaluation saturation and are heavily biased toward focused scenes, limiting their effectiveness in real-world environments where detection is hindered by environmental factors. To address this, we introduce <strong>MIST</strong> -- a <strong>M</strong>ultilingual <strong>I</strong>ncidental <strong>S</strong>cene <strong>T</strong>ext dataset featuring diverse text instances across 11 languages. MIST provides language, transcription, legibility, and fine-grained polygon-shaped annotations across 12K scene images and 600K word-level text instances. Images are captured along roads using a GoPro mounted on a moving car to capture real-world complexities, ensuring the scenes are <strong>incidental</strong> rather than deliberately framed. MIST establishes a new challenging benchmark to enable robust evaluation of scene text detection methods in real-world scenarios.`,
     method: {

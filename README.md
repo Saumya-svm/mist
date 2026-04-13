@@ -15,6 +15,8 @@ To ensure temporal and regional diversity, we enforced per-region and per-sequen
 
 MIST is designed to be highly **incidental**. We quantify this using metrics like \(M_3\) (average area of text instance relative to image), where MIST shows significantly smaller text instances compared to existing focused datasets, mirroring real-world complexity.
 
+**Dataset URL:** [https://cvit.iiit.ac.in/images/datasets/mist/mist.zip](https://cvit.iiit.ac.in/images/datasets/mist/mist.zip)
+
 ## Characteristics
 
 MIST displays a **well-balanced** and **dense** text distribution compared to existing datasets. With M₁ = 48, MIST has approximately **4× the text density** of ICDAR15 and **6× that of COCO-Text**.
